@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>RSpec Intro</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/vs.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+    <style>
+      .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+        text-transform: none;
+      }
+      code.lang-bash .hljs-comment { font-size: 0.65em; }
+      span.monospace { font-family: monospace; font-weight: bold; }
+      .reveal .slides dt { font-family: monospace; }
+      .reveal .slides cite {font-size: 0.5em; }
+      .reveal .slides .note {
+        font-size: 0.5em;
+        background-color: #aaffaa;
+        border: solid 1px #99cc99;
+        width: 85%;
+        margin: auto;
+        padding: 20px 0px;
+      }
+      .reveal .slides img { border: none; box-shadow: none; }
+      .reveal .slides td { font-size: 0.7em; }
+      .reveal table tr:last-child th {
+        border-bottom: none;
+      }
+      .reveal table.expectation-matchers td[data-markdown] {
+        font-size: 0.4em;
+      }
+      .reveal table.expectation-matchers td[data-markdown] p {
+        margin: 0;
+      }
+    </style>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+        <section class="center">
+					<h1>A (Brief!) Intro to RSpec</h1>
+					<p>
+						<small>Doug Price / <a href="http://twitter.com/solipet">@solipet</a></small>
+					</p>
+          <img src="images/frog.png" alt="a beautifully drawn frog, very realistic actually">
+					<p>
+            <small>December 8, 2015</small>
+					</p>
+				</section>
+
+				<section>
+          <h2>Components of RSpec</h2>
+          <div>
+            <ul>
+              <li><a href="http://rspec.info/documentation/3.4/rspec-core/">rspec-core</a>
+                <ul>
+                  <li><code>describe, it, before, let, subject</code></li> 
+                </ul>
+              </li>
+              <li class="fragment"><a href="http://rspec.info/documentation/3.4/rspec-expectations/">rspec-expectations</a>
+                <ul>
+                  <li><code>expect(book).to be_published</code></li> 
+                </ul>
+              </li>
+              <li class="fragment"><a href="http://rspec.info/documentation/3.4/rspec-mocks/">rspec-mocks</a>
+                <ul>
+                  <li>stubs, fakes, and message expectations</li> 
+                  <li><code>allow(post).to receive_messages(
+                                          title: "Why RSpec?",
+                                          author: doug)</code></li>
+                </ul>
+              </li>
+              <li class="fragment"><a href="http://rspec.info/documentation/3.4/rspec-rails/">rspec-rails</a>
+              </li>
+            </ul>
+          </div>
+          <p class="note fragment">
+            Plus 283 other gems!  Zomg!!!
+          </p>
+				</section>
+
+        <section>
+          <h2>rspec-core: ExampleGroup</h2>
+          <dl>
+            <dt>describe, context</dt>
+            <dd>
+            <p>Creates an <span class=monospace>ExampleGroup</span>. Within the block passed to <span class=monospace>describe</span>, you can declare examples using the <span class=monospace>it</span> method.</p>
+            <p>You can also declare nested groups using the <span class=monospace>describe</span> or <span class=monospace>context</span> methods.</p>
+            </dd>
+          </dl>
+          <div data-markdown>
+``` ruby
+describe Post do
+  context "published" do
+    ...
+  end
+  
+  context "draft" do
+    ...
+  end
+end
+```
+          </div>
+        </section>
+
+        <section>
+          <h2>rspec-core: Example</h2>
+          <dl>
+            <dt>it, specify, example</dt><dd>Creates an <span class=monospace>Example</span>. Within the block passed to <span class=monospace>describe</span>, you can declare examples using the <span class=monospace>it</span> method.</dd>
+          </dl>
+          <div data-markdown>
+``` ruby
+describe Post do
+  context "published" do
+    it "shows the date it was published" do
+      ...
+    end
+  end
+end
+```
+          </div>
+        </section>
+
+				<section>
+          <section>
+            <h2>rspec-core: Hooks</h2>
+            <dl>
+              <dt>before, after, around</dt>
+              <dd>
+                <p>Methods to support common setup and teardown.</p>
+                <p>Available from any <span class=monospace>describe</span> or <span class=monospace>context</span> block, or off the configuration object to define global setup/teardown logic.</p>
+              </dd>
+            </dl>
+            <div data-markdown>
+``` ruby
+describe Post do
+  before do
+    @post = Post.new
+  end
+
+  it "starts as a draft" do
+    expect(@post.published).to be(false)
+  end
+end
+```
+            </div>
+          </section>
+          <section>
+            <img src="images/before-order.png" alt="screenshot showing before scope ordering">
+            <cite><a href="http://www.rubydoc.info/gems/rspec-core/RSpec/Core/Hooks#before-instance_method">http://www.rubydoc.info/gems/rspec-core/RSpec/Core/Hooks#before-instance_method</a></cite>
+          </section>
+				</section>
+
+        <section>
+          <section>
+            <h2>rspec-core: MemoizedHelpers</h2>
+            <dl>
+              <dt>let</dt><dd>Generates a method whose return value is memoized after the first call.</dd>
+            </dl>
+            <div data-markdown>
+``` ruby
+describe Post do
+  let(:post) { Post.new }
+
+  it "is awesome" do
+    expect(post).to be_awesome
+  end
+end
+```
+            </div>
+          </section>
+          <section>
+            <h3>rspec-core: MemoizedHelpers</h3>
+            <dl>
+              <dt>subject</dt><dd>Declares a subject for an example group which can then be wrapped with <span class="monospace">expect</span> using <span class="monospace">is_expected</span> to make it the target of an expectation in a concise, one-line example.</dd>
+            </dl>
+            <div data-markdown>
+``` ruby
+describe Post do
+  subject { Post.new }
+
+  it { is_expected.to be_awesome }
+end
+```
+            </div>
+            <p class="note fragment">
+              Note: <span class="monospace">is_expected</span> is defined in rspec-core, but only works if rspec-expectations is included!
+            </p>
+          </section>
+        </section>
+
+        <section>
+          <h2>rspec-expectations: Matchers</h2>
+          <table class="expectation-matchers">
+            <tr><th>Type</th>                <th>Example</th></tr>
+            <tr><td>Equivalance</td>         <td data-markdown>`expect(actual).to eq(expected)   # passes if actual == expected`</td></tr>
+            <tr><td>Identity</td>            <td data-markdown>`expect(actual).to be(expected)   # passes if actual.equal?(expected)`</td></tr>
+            <tr><td>Comparisons</td>         <td data-markdown>`expect(actual).to be >  expected`</td></tr>
+            <tr><td>Regular Expressions</td> <td data-markdown>`expect(actual).to match(/expression/)`</td></tr>
+            <tr><td>Types/classes</td>       <td data-markdown>`expect(actual).to be_a(expected) # passes if actual.kind_of?(expected)`</td></tr>
+            <tr><td>Truthiness</td>          <td data-markdown>`expect(actual).to be true        # passes if actual == true`</td></tr>
+            <tr><td>Errors</td>              <td data-markdown>`expect { ... }.to raise_error(ErrorClass, "message")`</td></tr>
+            <tr><td>Throws</td>              <td data-markdown>`expect { ... }.to throw_symbol(:symbol, 'value')`</td></tr>
+            <tr><td>Yielding</td>            <td data-markdown>`expect { |b| 5.tap(&b) }.to yield_control`</td></tr>
+            <tr><td>Predicate</td>           <td data-markdown>`expect(actual).to be_xxx         # passes if actual.xxx?`</td></tr>
+            <tr><td>Ranges</td>              <td data-markdown>`expect(1..10).to cover(3)`</td></tr>
+            <tr><td>Collection</td>          <td data-markdown>`expect(actual).to include(expected)`</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>rspec-expectations: Should matchers</h2>
+
+          <p>Starting in v2.11, the <span class="monospace">expect</span> method was introduced and is now recommended.  The older <span class="monospace">should</span> syntax is still supported.</p>
+
+          <table>
+            <tr><th>Should</th><th>Expect</th></tr>
+            <tr><td data-markdown>`actual.should eq(expected)`</td><td data-markdown>`expect(actual).to eq(expected)`</td></tr>
+            <tr><td data-markdown>`actual.should match(/expression/)`</td><td data-markdown>`expect(actual).to match(/expression/)`</td></tr>
+          </table>
+        </section>
+
+				<section>
+          <h2>rspec-rails: setup</h2>
+
+          <div data-markdown style="width: 90%">
+``` bash
+$ vim Gemfile
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0'
+end
+
+$ bundle install --binstubs
+...
+
+$ rails generate rspec:install
+Looks like your app's ./bin/rails is a stub that was generated by Bundler.
+
+In Rails 4, your app's bin/ directory contains executables that are versioned
+like any other source code, rather than stubs that are generated on demand.
+
+Here's how to upgrade:
+
+  bundle config --delete bin    # Turn off Bundler's stub generator
+  rake rails:update:bin         # Use the new Rails 4 executables
+  git add bin                   # Add bin/ to source control
+
+You may need to remove bin/ from your .gitignore as well.
+...
+
+$ cat .rspec
+--color
+--require spec_helper
+
+$ cat spec/spec_helper.rb
+# This file was generated by the `rails generate rspec:install` command. Conventionally, all
+# specs live under a `spec` directory, which RSpec adds to the `$LOAD_PATH`.
+# The generated `.rspec` file contains `--require spec_helper` which will cause
+# this file to always be loaded, without a need to explicitly require it in any
+# files.
+#
+# Given that it is always loaded, you are encouraged to keep this file as
+# light-weight as possible. Requiring heavyweight dependencies from this file
+# will add to the boot time of your test suite on EVERY test run, even for an
+# individual file that may not need all of that loaded. Instead, consider making
+# a separate helper file that requires the additional dependencies and performs
+# the additional setup, and require it from the spec files that actually need
+# it.
+#
+# The `.rspec` file also contains a few flags that are not defaults but that
+# users commonly want.
+#
+# See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+RSpec.configure do |config|
+  # rspec-expectations config goes here. You can use an alternate
+  # assertion/expectation library such as wrong or the stdlib/minitest
+  # assertions if you prefer.
+  config.expect_with :rspec do |expectations|
+    # This option will default to `true` in RSpec 4. It makes the `description`
+    # and `failure_message` of custom matchers include text for helper methods
+    # defined using `chain`, e.g.:
+    #     be_bigger_than(2).and_smaller_than(4).description
+    #     # => "be bigger than 2 and smaller than 4"
+    # ...rather than:
+    #     # => "be bigger than 2"
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+  end
+
+  # rspec-mocks config goes here. You can use an alternate test double
+  # library (such as bogus or mocha) by changing the `mock_with` option here.
+  config.mock_with :rspec do |mocks|
+    # Prevents you from mocking or stubbing a method that does not exist on
+    # a real object. This is generally recommended, and will default to
+    # `true` in RSpec 4.
+    mocks.verify_partial_doubles = true
+  end
+
+# The settings below are suggested to provide a good initial experience
+# with RSpec, but feel free to customize to your heart's content.
+=begin
+  # These two settings work together to allow you to limit a spec run
+  # to individual examples or groups you care about by tagging them with
+  # `:focus` metadata. When nothing is tagged with `:focus`, all examples
+  # get run.
+  config.filter_run :focus
+  config.run_all_when_everything_filtered = true
+
+  # Allows RSpec to persist some state between runs in order to support
+  # the `--only-failures` and `--next-failure` CLI options. We recommend
+  # you configure your source control system to ignore this file.
+  config.example_status_persistence_file_path = "spec/examples.txt"
+
+  # Limits the available syntax to the non-monkey patched syntax that is
+  # recommended. For more details, see:
+  #   - http://rspec.info/blog/2012/06/rspecs-new-expectation-syntax/
+  #   - http://www.teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
+  #   - http://rspec.info/blog/2014/05/notable-changes-in-rspec-3/#zero-monkey-patching-mode
+  config.disable_monkey_patching!
+
+  # Many RSpec users commonly either run the entire suite or an individual
+  # file, and it's useful to allow more verbose output when running an
+  # individual spec file.
+  if config.files_to_run.one?
+    # Use the documentation formatter for detailed output,
+    # unless a formatter has already been configured
+    # (e.g. via a command-line flag).
+    config.default_formatter = 'doc'
+  end
+
+  # Print the 10 slowest examples and example groups at the
+  # end of the spec run, to help surface which specs are running
+  # particularly slow.
+  config.profile_examples = 10
+
+  # Run specs in random order to surface order dependencies. If you find an
+  # order dependency and want to debug it, you can fix the order by providing
+  # the seed, which is printed after each run.
+  #     --seed 1234
+  config.order = :random
+
+  # Seed global randomization in this process using the `--seed` CLI option.
+  # Setting this allows you to use `--seed` to deterministically reproduce
+  # test failures related to randomization by passing the same `--seed` value
+  # as the one that triggered the failure.
+  Kernel.srand config.seed
+=end
+end
+
+```
+          </div>
+				</section>
+
+        <section>
+          <h2>Running tests</h2>
+          <div data-markdown>
+``` bash
+$ rake spec
+
+$ rake spec:models
+
+$ rake -T | grep spec
+
+```
+				  </div>
+				</section>
+
+        <section>
+          <h2>rspec-rails Spec Types</h2>
+          <table>
+            <tr><th>Model</th>     <td>Used to describe behavior of models in the application.</td></tr>
+            <tr><th>Controller</th><td>Used to describe behavior of Rails controllers.</td></tr>
+            <tr><th>Feature</th>   <td>Used to test your application from the outside by simulating a browser.</td></tr>
+            <tr class="fragment"><th>Request</th>   <td>Used to specify one or more request/response cycles from end to end using a black box approach.</td></tr>
+            <tr class="fragment"><th>View</th>      <td>Used to test the rendering of your view templates.</td></tr>
+            <tr class="fragment"><th>Routing</th>   <td>Used to test the routes against controller actions.</td></tr>
+            <tr class="fragment"><th>Helper</th>    <td>Used to validate the behavior of helper methods.</td></tr>
+          </table>
+
+          <cite class="fragment"><a href="http://rspec.info/documentation/3.4/rspec-rails/">http://rspec.info/documentation/3.4/rspec-rails/</a></cite>
+        </section>
+
+        <!--
+        <section>
+            <h2>Model Specs</h2>
+            <p>Use model specs to describe behavior of models in the application.</p>
+        </section>
+
+        <section>
+          <h2>Controller Specs</h2>
+          <p>Use controller specs to describe behavior of Rails controllers.</p>
+        </section>
+
+        <section>
+          <h2>Request Specs</h2>
+          <p>Use request specs to specify one or more request/response cycles from end to end using a black box approach.</p>
+        </section>
+
+        <section>
+          <h2>Feature Specs</h2>
+          <p>Feature specs test your application from the outside by simulating a browser.</p>
+        </section>
+
+        <section>
+          <h2>View Specs</h2>
+          <p>Use view specs to test the rendering of your view templates.</p>
+        </section>
+
+        <section>
+          <h2>Routing Specs</h2>
+          <p>Use routing specs test the routes against their controller actions.</p>
+        </section>
+
+        <section>
+          <h2>Helper Specs</h2>
+          <p>Use helper specs to validate the behavior of helper methods.</p>
+        </section>
+-->
+				<section class="center">
+          <h2>Demo??!</h2>
+				</section>
+
+				<section class="center">
+          <h2>References</h2>
+          <ul>
+            <li><a href="http://rspec.info/documentation/">RSpec.info Documentation</a></li>
+            <li><a href="https://github.com/rspec/rspec-rails">rspec-rails Github page</a></li>
+            <li><a href="http://blog.teamtreehouse.com/an-introduction-to-rspec">Treehouse Intro to RSpec</a></li>
+            <li><a href="http://betterspecs.org/">Better Specs</a></li>
+            <li><a href="http://rspec.info/blog/2012/06/rspecs-new-expectation-syntax/">RSpec's New Expectation Syntax</a></li>
+            <!--
+            <li><a href="http://assemble.io/docs/Cheatsheet-Markdown.html">Markdown Cheatsheet</a></li>
+            <li><a href="https://github.com/hakimel/reveal.js/tree/3.2.0">reveal.js</a></li>
+            -->
+          </ul>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: false,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
