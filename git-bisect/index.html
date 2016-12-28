@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Git Bisect</title>
+		<meta name="description" content="A brief intro to git bisect with a live demonstration.">
+		<meta name="author" content="Doug Price">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+		<link rel="stylesheet" href="../css/theme/doug.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<!-- link rel="stylesheet" href="../lib/css/vs.css" -->
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section class="center">
+					<h1>A (Brief!) Intro to Git Bisect</h1>
+					<p>
+						<small>Doug Price / <a href="http://twitter.com/solipet">@solipet</a></small>
+					</p>
+          <img src="../images/frog.png" alt="a beautifully drawn frog, very realistic actually">
+					<p>
+            <small>January 10, 2017</small>
+					</p>
+				</section>
+				<section>
+          <h2>Git Bisect</h2>
+
+          <p>Use binary search to find the commit that introduced a bug</p>
+        </section>
+				<section>
+          <h2>Basic Usage</h2>
+
+          <div data-markdown style="width: 90%">
+``` bash
+$ git bisect start
+$ git bisect bad
+$ git checkout last-known-working-tag
+$ git bisect good
+```
+          </div>
+        </section>
+        <section class="center">
+          <h2>Let's give it a try!</h2>
+          <iframe src="//giphy.com/embed/SPq65eWY1BSpO" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a class="attribution" href="http://giphy.com/gifs/demo-SPq65eWY1BSpO">via GIPHY</a></p>
+        </section>
+        <section>
+          <section>
+            <h2>Pick your own terms</h2>
+
+            <p>If "good" and "bad" don't fit the search you are doing, use different terms.</p>
+
+            <div data-markdown style="width: 90%">
+``` bash
+$ git bisect start --term-new foo --term-old bar
+$ git bisect foo
+$ git bisect bar last-known-bar-tag
+```
+            </div>
+          </section>
+          <section>
+            <h3>Don't be so judgy!</h3>
+
+            <p>If "good" and "bad" are too judgemental for you, pick terms you like.</p>
+
+            <div data-markdown style="width: 90%">
+``` bash
+$ git bisect start --term-new good_try --term-old solid
+$ git bisect good_try
+$ git bisect solid last-known-solid-tag
+```
+            </div>
+          </section>
+          <section>
+            <h3>Or perhaps you're looking for a regression in performance...</h3>
+
+            <div data-markdown style="width: 90%">
+``` bash
+$ git bisect start --term-new slow --term-old fast
+$ git bisect slow
+$ git bisect fast last-known-fast-tag
+```
+            </div>
+          </section>
+          <section>
+            <h3>Or maybe you just noticed that things got way better and you want to know how/why/thanks to whom...</h3>
+
+            <div data-markdown style="width: 90%">
+``` bash
+$ git bisect start --term-new amazing --term-old unbearable
+$ git bisect amazing
+$ git bisect unbearable last-known-unbearable-tag
+```
+            </div>
+          </section>
+        </section>
+				<section>
+          <h2>Oops!  I meant good, not bad!</h2>
+
+          <p>No problem!  Just recode the bisect to a file, reset it, then edit the file and replay it!</p>
+
+          <div data-markdown style="width: 90%">
+``` bash
+$ git bisect bad
+$ git bisect log > bisect_log
+# edit bisect_log to git rid of bad call
+$ git bisect reset
+$ git bisect replay bisect_log
+```
+          </div>
+        </section>
+				<section>
+          <h2>Ugh!  This commit is so f'd I can't even test it!!</h2>
+
+          <p>No problem -- just skip it.</p>
+
+          <div data-markdown style="width: 90%">
+``` bash
+$ git bisect skip
+```
+          </div>
+
+          <p>Or, if you know you're close to a commit that you can test, check it out!</p>
+
+          <div data-markdown style="width: 90%">
+``` bash
+$ git bisect good/bad       # previous round was good or bad.
+Bisecting: 337 revisions left to test after this (roughly 9 steps)
+$ git reset --hard HEAD~3   # try 3 revisions before what
+                            # was suggested
+$ git bisect good/bad
+```
+          </div>
+        </section>
+        <section>
+          <h2>OK, that was fun the first time...</h2>
+          <p>If your test can be automated with a script, then the entire bisect can be automated!</p>
+
+          <div data-markdown style="width: 90%">
+``` bash
+$ git bisect run test_script.sh arguments
+```
+          </div>
+        </section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

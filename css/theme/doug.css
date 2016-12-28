@@ -1,0 +1,49 @@
+// Overrides of the default theme settings
+
+.reveal h1 {
+  text-transform: none;
+}
+.reveal h2 {
+  text-transform: none;
+}
+.reveal h3 {
+  text-transform: none;
+}
+.reveal h4 {
+  text-transform: none;
+}
+.reveal h5 {
+  text-transform: none;
+}
+.reveal h6 {
+  text-transform: none;
+}
+
+.reveal a.attribution {
+  font-size: 0.3em;
+  color: lightgray;
+}
+
+code.lang-bash .hljs-comment { font-size: 0.65em; }
+span.monospace { font-family: monospace; font-weight: bold; }
+.reveal .slides dt { font-family: monospace; }
+.reveal .slides cite {font-size: 0.5em; }
+.reveal .slides .note {
+  font-size: 0.5em;
+  background-color: #aaffaa;
+  border: solid 1px #99cc99;
+  width: 85%;
+  margin: auto;
+  padding: 20px 0px;
+}
+.reveal .slides img { border: none; box-shadow: none; }
+.reveal .slides td { font-size: 0.7em; }
+.reveal table tr:last-child th {
+  border-bottom: none;
+}
+.reveal table.expectation-matchers td[data-markdown] {
+  font-size: 0.4em;
+}
+.reveal table.expectation-matchers td[data-markdown] p {
+  margin: 0;
+}
