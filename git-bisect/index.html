@@ -41,7 +41,7 @@
 				<section>
           <h2>Git Bisect</h2>
 
-          <p>Use binary search to find the commit that introduced a bug</p>
+          <p>Use binary search to find the commit<br>that introduced a change</p>
         </section>
 				<section>
           <h2>Basic Usage</h2>
@@ -54,10 +54,6 @@ $ git checkout last-known-working-tag
 $ git bisect good
 ```
           </div>
-        </section>
-        <section class="center">
-          <h2>Let's give it a try!</h2>
-          <iframe src="//giphy.com/embed/SPq65eWY1BSpO" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a class="attribution" href="http://giphy.com/gifs/demo-SPq65eWY1BSpO">via GIPHY</a></p>
         </section>
         <section>
           <section>
@@ -80,8 +76,8 @@ $ git bisect bar last-known-bar-tag
 
             <div data-markdown style="width: 90%">
 ``` bash
-$ git bisect start --term-new good_try --term-old solid
-$ git bisect good_try
+$ git bisect start --term-new a-for-effort --term-old solid
+$ git bisect a-for-effort
 $ git bisect solid last-known-solid-tag
 ```
             </div>
@@ -102,9 +98,9 @@ $ git bisect fast last-known-fast-tag
 
             <div data-markdown style="width: 90%">
 ``` bash
-$ git bisect start --term-new amazing --term-old unbearable
+$ git bisect start --term-new amazing --term-old meh
 $ git bisect amazing
-$ git bisect unbearable last-known-unbearable-tag
+$ git bisect meh last-known-meh-tag
 ```
             </div>
           </section>
@@ -156,6 +152,15 @@ $ git bisect good/bad
 $ git bisect run test_script.sh arguments
 ```
           </div>
+        </section>
+        <section class="center">
+          <h2>Let's give it a try!</h2>
+          <iframe src="//giphy.com/embed/SPq65eWY1BSpO" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a class="attribution" href="http://giphy.com/gifs/demo-SPq65eWY1BSpO">via GIPHY</a></p>
+        </section>
+        <section>
+          <h2>References</h2>
+          <p><a href="https://git-scm.com/docs/git-bisect">https://git-scm.com/docs/git-bisect</a></p>
+          <p style="font-size:20px;">(It's all right here!  ^^^)</p>
         </section>
 			</div>
 		</div>
