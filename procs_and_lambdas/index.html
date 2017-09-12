@@ -156,7 +156,7 @@ countdown {|n| puts "#{n} bottles of beer..."}
         <section>
           <h2>Reference a block</h2>
           Blocks can be declared as arguments and re-used:
-          <div class="note info fragment fade-in">
+          <div class="note info ">
             Can&rsquo;t yield in this case, use <em>call</em> instead.
           </div>
           <div data-markdown style="width: 90%">
@@ -217,7 +217,7 @@ my_proc = Proc.new {|n| puts "#{n} bottles of beer..."}
 ```
           </div>
 
-          <div class="note warning fragment fade-in">
+          <div class="note warning ">
             <span class=code>Proc.new</span> takes a block... wha?
           </div>
 
@@ -261,7 +261,7 @@ My block is a Proc!
 ```
           </div>
 
-          <div class="note info fragment fade-in">
+          <div class="note info ">
             The <span class=code>&amp;foo</span> syntax tells the method to take the block given and convert it implicitly into a Proc object!
           </div>
 
@@ -284,7 +284,7 @@ countdown_yield(&my_proc)
 ```
           </div>
 
-          <div class="note info fragment fade-in">
+          <div class="note info ">
             The <span class=code>&amp;my_proc</span> syntax "does two things: it triggers a call to my_proc's <span class="code">to_proc</span> method, and it tells Ruby that the resulting Proc object is serving as a code block stand-in."  - The Well-Grounded Rubyist
           </div>
 
@@ -301,7 +301,7 @@ Instead of
  => ["A", "B", "C", "D", "E", "F", "G", "H", "I", ...]
 ```
           </div>
-          <div class="fragment fade-in" data-markdown style="width: 90%">
+          <div class="" data-markdown style="width: 90%">
 ``` ruby
 Try this
 
@@ -310,10 +310,31 @@ Try this
 ```
           </div>
 
-          <div class="note info fragment fade-in">
+          <div class="note info ">
             The <span class="code">&amp;</span> triggers <span class="code">Symbol#to_proc</span> which returns a Proc object that responds with the method named by the symbol.
           </div>
 
+        </section>
+
+        <section>
+          <h2>Symbol#to_proc</h2>
+
+          How does Symbol#to_proc work?
+
+          <div data-markdown style="width: 90%">
+``` ruby
+class Symbol
+  def to_proc
+    Proc.new do |arg0, *args|
+      arg0.send(self, *args)
+    end
+  end
+end
+```
+          </div>
+          <div class="note info">
+            Thanks, Nick!
+          </div>
         </section>
         </section>
 
@@ -321,8 +342,8 @@ Try this
         <section>
           <h1>Lambdas</h1>
 
-          Lambdas are ... <span class="fragment fade-in">Procs!</span>
-          <div class="note info fragment fade-in">
+          Lambdas are ... <span class="">Procs!</span>
+          <div class="note info ">
             but special!
           </div>
         </section>
@@ -343,7 +364,7 @@ my_lamb = -> (n) {puts "#{n} bottles of beer..."}
 ```
           </div>
 
-          <div class="fragment fade-in">
+          <div class="">
             <span class="code">-></span> ~= &lambda;
           </div>
         </section>
@@ -459,6 +480,13 @@ defined in the method
 ```
           </div>
         </section>
+        </section>
+
+        <section>
+          <h1>Questions?</h1>
+
+          <p>
+          Slides online at <a href="http://solipet.github.io/procs_and_lambdas/">http://solipet.github.io/procs_and_lambdas/</a>
         </section>
       </div>
     </div>
