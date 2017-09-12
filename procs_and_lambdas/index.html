@@ -46,6 +46,9 @@
         font-family: monospace;
         background-color: #eee;
       }
+      .reveal del {
+        color: #ccc;
+      }
     </style>
 
     <!-- Printing and PDF exports -->
@@ -295,7 +298,7 @@ countdown_yield(&my_proc)
 Instead of
 
 ('a'..'z').map {|char| char.capitalize}
- => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+ => ["A", "B", "C", "D", "E", "F", "G", "H", "I", ...]
 ```
           </div>
           <div class="fragment fade-in" data-markdown style="width: 90%">
@@ -303,7 +306,7 @@ Instead of
 Try this
 
 ('a'..'z').map &:capitalize
- => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+ => ["A", "B", "C", "D", "E", "F", "G", "H", "I", ...]
 ```
           </div>
 
@@ -339,16 +342,27 @@ my_lamb = lambda {|n| puts "#{n} bottles of beer..."}
 my_lamb = -> (n) {puts "#{n} bottles of beer..."}
 ```
           </div>
+
+          <div class="fragment fade-in">
+            <span class="code">-></span> ~= &lambda;
+          </div>
         </section>
 
         <section>
           <h2>Lambdas are Special Procs</h2>
           <div data-markdown style="width: 90%">
 ```
-> my_proc = Proc.new {|n| "${n} bottles of beer..."}
+my_proc = Proc.new {|n| "${n} bottles of beer..."}
  => #< Proc:0x007fd7f1437260@(irb):126>
-> my_lamb = -> (n) {"#{n} bottles of beer..."}
+
+my_proc.lambda?
+ => false
+
+my_lamb = -> (n) {"#{n} bottles of beer..."}
  => #< Proc:0x007fd7f1425970@(irb):127 (lambda)>
+
+my_lamb.lambda?
+ => true
  ```
           </div>
         </section>
@@ -360,10 +374,10 @@ my_lamb = -> (n) {puts "#{n} bottles of beer..."}
 
           <div data-markdown style="width: 90%">
 ``` ruby
-> my_lamb.call
+my_lamb.call
 ArgumentError: wrong number of arguments (0 for 1)
 
-> my_proc.call
+my_proc.call
 # => nil
 ```
           </div>
@@ -372,7 +386,7 @@ ArgumentError: wrong number of arguments (0 for 1)
         <section>
           <h2>Lambda return</h2>
 
-          A lambda can return from its code block, while a Proc will return from the calling method:
+          A lambda can return from its code block, while a Proc will return from the calling method, or return an error from the top-level context:
 
           <div data-markdown style="width: 90%">
 ``` ruby
@@ -393,20 +407,20 @@ I'm out of here!
 take_a_proc &return_proc
 Before the yield...
 LocalJumpError: unexpected return
+
+def call_a_proc
+  puts "Before the call..."
+  arg = Proc.new { puts "I'm out of here!" ; return }
+  arg.call
+  puts "... after the call."
+end
+call_a_proc
+Before the call...
+I'm out of here!
+ => nil
+
 ```
           </div>
-        </section>
-
-        <section>
-          <h2>Lambdas</h2>
-        </section>
-
-        <section>
-          <h2>Lambdas</h2>
-        </section>
-
-        <section>
-          <h2>Lambdas</h2>
         </section>
         </section>
       </div>
