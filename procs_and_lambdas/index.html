@@ -2,15 +2,30 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+
+		<title>Procs &amp; Lambdas</title>
+
+		<meta name="description" content="Blocks, Procs, &, Doug Price">
+
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<title>reveal.js</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/white.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="../lib/css/vc.css">
+
+		<style>
+		  .reveal section img {
+		    border: none;
+        box-shadow: none;
+      }
+      .reveal pre {
+      	box-shadow: none;
+      }
+    </style>
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -24,8 +39,72 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+        <section class="center">
+					<h1>Blocks, Procs &amp; Lambdas!</h1>
+					<p>
+						<small>Doug Price / <a href="http://twitter.com/solipet">@solipet</a></small>
+					</p>
+          <img src="images/frog.png" alt="a beautifully drawn frog, very realistic actually">
+					<p>
+            <small>September 12, 2017</small>
+					</p>
+				</section>
+
+
+				<section>
+				  <h2>Blocks</h2>
+
+				  A block is one of those blobs of code we see all the time:
+
+				  <div data-markdown style="width: 90%">
+``` ruby
+1..10.each do |n|
+  puts "The #{n.ordinalize} time around..."
+end
+```
+					</div>
+					<p>or</p>
+				  <div data-markdown style="width: 90%">
+``` ruby
+1..10.each {|n| puts "The #{n.ordinalize} time around"}
+```
+					</div>
+				</section>
+
+				<section>
+					<h2>How do blocks work?</h2>
+					They yield the floor...
+
+				  <div data-markdown style="width: 90%">
+``` ruby
+def take_a_block
+  puts "Before the yield..."
+  yield
+  puts "... after the yield"
+end
+```
+					</div>
+				</section>
+
+				<section>
+					<h2>Procs</h2>
+
+				  A block is <em>actually</em> a Proc:
+
+				  <div data-markdown style="width: 90%">
+``` ruby
+1..10.each do |n|
+  puts "The #{n.ordinalize} time around..."
+end
+```
+					</div>
+					<p>or</p>
+				  <div data-markdown style="width: 90%">
+``` ruby
+1..10.each {|n| puts "The #{n.ordinalize} time around"}
+```
+
+				</section>
 			</div>
 		</div>
 
