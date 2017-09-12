@@ -422,6 +422,43 @@ I'm out of here!
 ```
           </div>
         </section>
+        <section>
+          <h2>Functional Programming</h2>
+
+          Sadly, I'm not going to go into this tonight, but there are <a href="https://medium.com/craft-academy/functional-programming-in-ruby-for-people-who-dont-know-what-functional-programming-is-f0c4ab7dc68c">lots</a> of <a href="http://csvoss.github.io/assets/csvoss-deconstructconf-2017.pdf">examples</a> on the <a href="http://aurelien-herve.com/blog/2014/02/27/some-cool-functional-programming-with-ruby/">interwebs</a>.
+        </section>
+        </section>
+
+        <section>
+        <section>
+          <h1>Closures</h1>
+
+          <p>
+          Both procs and lambdas are also closures, i.e., any variables that are in scope when the proc is created, will remain in scope when the proc is called.
+          </p>
+        </section>
+
+        <section>
+          <h2>An example of Closures</h2>
+          <div data-markdown style="width: 90%">
+``` ruby
+def call_a_proc(proc_arg)
+  x = "defined in the method"
+  puts x
+  proc_arg.call
+  puts x
+end
+
+x = "defined outside the method"
+p = Proc.new { puts x }
+call_a_proc p
+defined in the method
+defined outside the method
+defined in the method
+ => nil
+```
+          </div>
+        </section>
         </section>
       </div>
     </div>
