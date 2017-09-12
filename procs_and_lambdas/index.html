@@ -1,81 +1,103 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-		<title>Procs &amp; Lambdas</title>
+    <title>Procs &amp; Lambdas</title>
 
-		<meta name="description" content="Blocks, Procs, &, Doug Price">
+    <meta name="description" content="Blocks, Procs, &, Doug Price">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/white.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/white.css">
 
-		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="../lib/css/vc.css">
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="../lib/css/vc.css">
 
-		<style>
-		  .reveal section img {
-		    border: none;
+    <style>
+      .reveal section img {
+        border: none;
         box-shadow: none;
       }
       .reveal pre {
-      	box-shadow: none;
+        box-shadow: none;
+      }
+      .reveal pre code {
+        max-height: 420px;
+      }
+      .reveal .output{
+        font-family: monospace;
+        font-size: 100%;
+        color: #aaa;
+      }
+      .reveal .note {
+        font-size: 50%;
+      }
+      .reveal .note.info {
+        color: #393;
+      }
+      .reveal .note.warning {
+        color: #f33;
+      }
+      .reveal .code {
+        font-family: monospace;
+        background-color: #eee;
       }
     </style>
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
         <section class="center">
-					<h1>Blocks, Procs &amp; Lambdas!</h1>
-					<p>
-						<small>Doug Price / <a href="http://twitter.com/solipet">@solipet</a></small>
-					</p>
+          <h1>Blocks, Procs &amp; Lambdas!</h1>
+          <p>
+            <small>Doug Price / <a href="http://twitter.com/solipet">@solipet</a></small>
+          </p>
           <img src="images/frog.png" alt="a beautifully drawn frog, very realistic actually">
-					<p>
+          <p>
             <small>September 12, 2017</small>
-					</p>
-				</section>
+          </p>
+        </section>
 
 
-				<section>
-				  <h2>Blocks</h2>
+        <section>
+        <section>
+          <h1>Blocks</h1>
 
-				  A block is one of those blobs of code we see all the time:
+          A block is one of those blobs of code we see all the time:
 
-				  <div data-markdown style="width: 90%">
+          <div data-markdown style="width: 90%">
 ``` ruby
 1..10.each do |n|
   puts "The #{n.ordinalize} time around..."
 end
 ```
-					</div>
-					<p>or</p>
-				  <div data-markdown style="width: 90%">
+          </div>
+          <p>or</p>
+          <div data-markdown style="width: 90%">
 ``` ruby
 1..10.each {|n| puts "The #{n.ordinalize} time around"}
 ```
-					</div>
-				</section>
+          </div>
+        </section>
 
-				<section>
-					<h2>How do blocks work?</h2>
-					They yield the floor...
+        <section>
+          <h2>How do blocks work?</h2>
+          Methods that take blocks can call <em>yield</em> to execute them.
 
-				  <div data-markdown style="width: 90%">
+          <div data-markdown style="width: 90%">
 ``` ruby
 def take_a_block
   puts "Before the yield..."
@@ -83,46 +105,328 @@ def take_a_block
   puts "... after the yield"
 end
 ```
-					</div>
-				</section>
+          </div>
+        </section>
 
-				<section>
-					<h2>Procs</h2>
+        <section>
+          <h2>What if there's no block?</h2>
 
-				  A block is <em>actually</em> a Proc:
-
-				  <div data-markdown style="width: 90%">
+          <div data-markdown style="width: 90%">
 ``` ruby
-1..10.each do |n|
-  puts "The #{n.ordinalize} time around..."
+take_a_block
+  # => throws a LocalJumpError: no block given (yield)
+```
+          </div>
+
+          To fix this, check first!
+
+          <div data-markdown style="width: 90%">
+``` ruby
+def take_a_block
+  puts "Before the yield..."
+  yield if block_given?
+  puts "... after the yield"
 end
 ```
-					</div>
-					<p>or</p>
-				  <div data-markdown style="width: 90%">
+          </div>
+        </section>
+
+        <section>
+          <h2>Block parameters</h2>
+          Blocks can take arguments:
+          <div data-markdown style="width: 90%">
 ``` ruby
-1..10.each {|n| puts "The #{n.ordinalize} time around"}
+def countdown
+  (1..99).reverse_each do |n|
+    yield n if block_given?
+  end
+end
+
+countdown {|n| puts "#{n} bottles of beer..."}
+99 bottles of beer...
+98 bottles of beer...
+...
 ```
+          </div>
+        </section>
 
-				</section>
-			</div>
-		</div>
+        <section>
+          <h2>Reference a block</h2>
+          Blocks can be declared as arguments and re-used:
+          <div class="note info fragment fade-in">
+            Can&rsquo;t yield in this case, use <em>call</em> instead.
+          </div>
+          <div data-markdown style="width: 90%">
+``` ruby
+def countdown(&block)
+  (1..99).reverse_each do |n|
+    block.call n if block_given?
+    if n < 10
+      puts "   Oy, I'm starting to repeat myself!"
+      block.call n if block_given?
+    end
+  end
+end
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+countdown {|n| puts "#{n} bottles of beer..."}
+...
+1 bottles of beer...
+   Oy, I am starting to repeat myself!
+1 bottles of beer...
+```
+          </div>
+        </section>
+        </section>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
-				]
-			});
-		</script>
-	</body>
+        <section>
+        <section>
+          <h1>Procs</h1>
+
+          "Proc objects are blocks of code that have been bound to a set of local variables. Once bound, the code may be called in different contexts and still access those variables."
+
+          <div class="note">
+            Source: https://ruby-doc.org/core-2.4.1/Proc.html
+          </div>
+        </section>
+        <section>
+          <h2>Are Blocks Procs?</h2>
+
+          <div data-markdown style="width: 90%">
+``` ruby
+def take_a_block(&block)
+  puts "My block is a #{block.class}!"
+end
+
+take_a_block { "foo" }
+My block is a Proc!
+```
+          </div>
+        </section>
+
+        <section>
+          <h2>Save a proc to a variable</h2>
+
+          Procs can be saved to a var and passed as an argument to a method in lieu of a block.
+
+          <div data-markdown style="width: 90%">
+``` ruby
+my_proc = Proc.new {|n| puts "#{n} bottles of beer..."}
+```
+          </div>
+
+          <div class="note warning fragment fade-in">
+            <span class=code>Proc.new</span> takes a block... wha?
+          </div>
+
+          <div data-markdown style="width: 90%">
+``` ruby
+my_proc.call("Lots of ")
+Lots of bottles of beer...
+
+countdown(&my_proc)
+99 bottles of beer...
+98 bottles of beer...
+...
+```
+          </div>
+        </section>
+
+        <section>
+          <h2>Blocks vs. Procs</h2>
+          <p>
+          Blocks are not procs, procs are not blocks.
+          </p>
+          <p>
+          Procs are <strong>objects</strong> that take a block on creation and execute that block on Proc#call.
+          </p>
+          <p>
+          Blocks are <em>syntax</em> that allows us to pass a blob of code into a method expecting it.
+          </p>
+
+        </section>
+
+        <section>
+          <h2>But our block was a Proc...</h2>
+          <div data-markdown style="width: 90%">
+``` ruby
+def take_a_block(&foo)
+  puts "My block is a #{foo.class}!"
+end
+
+take_a_block { "foo" }
+My block is a Proc!
+```
+          </div>
+
+          <div class="note info fragment fade-in">
+            The <span class=code>&amp;foo</span> syntax tells the method to take the block given and convert it implicitly into a Proc object!
+          </div>
+
+        </section>
+
+        <section>
+          <h2>Procs to Blocks?</h2>
+          <div data-markdown style="width: 90%">
+``` ruby
+def countdown_yield
+  (1..99).reverse_each do |n|
+    yield n if block_given?
+  end
+end
+
+countdown_yield(&my_proc)
+99 bottles of beer...
+98 bottles of beer...
+...
+```
+          </div>
+
+          <div class="note info fragment fade-in">
+            The <span class=code>&amp;my_proc</span> syntax "does two things: it triggers a call to my_proc's <span class="code">to_proc</span> method, and it tells Ruby that the resulting Proc object is serving as a code block stand-in."  - The Well-Grounded Rubyist
+          </div>
+
+        </section>
+
+        <section>
+          <h2>Fun with procs</h2>
+          Let's repeat that: <span class="code">&amp;</span> triggers <span class="code">to_proc</span>
+          <div data-markdown style="width: 90%">
+``` ruby
+Instead of
+
+('a'..'z').map {|char| char.capitalize}
+ => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+```
+          </div>
+          <div class="fragment fade-in" data-markdown style="width: 90%">
+``` ruby
+Try this
+
+('a'..'z').map &:capitalize
+ => ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+```
+          </div>
+
+          <div class="note info fragment fade-in">
+            The <span class="code">&amp;</span> triggers <span class="code">Symbol#to_proc</span> which returns a Proc object that responds with the method named by the symbol.
+          </div>
+
+        </section>
+        </section>
+
+        <section>
+        <section>
+          <h1>Lambdas</h1>
+
+          Lambdas are ... <span class="fragment fade-in">Procs!</span>
+          <div class="note info fragment fade-in">
+            but special!
+          </div>
+        </section>
+
+        <section>
+          <h2>Lambda creation</h2>
+          With a code block:
+          <div data-markdown style="width: 90%">
+``` ruby
+my_lamb = lambda {|n| puts "#{n} bottles of beer..."}
+```
+          </div>
+
+          stabby lambda syntax:
+          <div data-markdown style="width: 90%">
+``` ruby
+my_lamb = -> (n) {puts "#{n} bottles of beer..."}
+```
+          </div>
+        </section>
+
+        <section>
+          <h2>Lambdas are Special Procs</h2>
+          <div data-markdown style="width: 90%">
+```
+> my_proc = Proc.new {|n| "${n} bottles of beer..."}
+ => #< Proc:0x007fd7f1437260@(irb):126>
+> my_lamb = -> (n) {"#{n} bottles of beer..."}
+ => #< Proc:0x007fd7f1425970@(irb):127 (lambda)>
+ ```
+          </div>
+        </section>
+
+        <section>
+          <h2>Lambda parameters</h2>
+
+          Must provide the correct number of parameters (like a method).
+
+          <div data-markdown style="width: 90%">
+``` ruby
+> my_lamb.call
+ArgumentError: wrong number of arguments (0 for 1)
+
+> my_proc.call
+# => nil
+```
+          </div>
+        </section>
+
+        <section>
+          <h2>Lambda return</h2>
+
+          A lambda can return from its code block, while a Proc will return from the calling method:
+
+          <div data-markdown style="width: 90%">
+``` ruby
+return_proc = Proc.new { puts "I'm out of here!" ; return }
+return_lamb = -> { puts "I'm out of here!" ; return }
+
+def take_a_proc(&arg)
+  puts "Before the call..."
+  arg.call
+  puts "... after the call."
+end
+
+take_a_proc &return_lamb
+Before the call...
+I'm out of here!
+... after the call.
+
+take_a_proc &return_proc
+Before the yield...
+LocalJumpError: unexpected return
+```
+          </div>
+        </section>
+
+        <section>
+          <h2>Lambdas</h2>
+        </section>
+
+        <section>
+          <h2>Lambdas</h2>
+        </section>
+
+        <section>
+          <h2>Lambdas</h2>
+        </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        dependencies: [
+          { src: 'plugin/markdown/marked.js' },
+          { src: 'plugin/markdown/markdown.js' },
+          { src: 'plugin/notes/notes.js', async: true },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
 </html>
